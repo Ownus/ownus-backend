@@ -1,2 +1,4 @@
-package my.sideproject.ownus.service;public interface UserService {
+package my.sideproject.ownus.service;
+
+public interface UserService {
 }

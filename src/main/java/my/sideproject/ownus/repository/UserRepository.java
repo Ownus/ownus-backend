@@ -1,2 +1,4 @@
-package my.sideproject.ownus.repository;public interface UserRepository {
+package my.sideproject.ownus.repository;
+
+public interface UserRepository {
 }
