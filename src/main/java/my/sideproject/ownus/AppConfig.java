@@ -1,25 +1,22 @@
 package my.sideproject.ownus;
 
-import my.sideproject.ownus.repository.JpaUserRepository;
+import my.sideproject.ownus.entity.emf.UniqueEntityManagerFactory;
+import my.sideproject.ownus.repository.UserJpaRepository;
 import my.sideproject.ownus.repository.UserRepository;
 import my.sideproject.ownus.service.UserService;
 import my.sideproject.ownus.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import javax.persistence.EntityManager;
+import javax.persistence.*;
+
 
 @Configuration
 public class AppConfig {
 
-    private EntityManager em;
 
-    @Autowired
-    public AppConfig(EntityManager em) {
-        this.em = em;
-    }
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
     @Bean
     public UserService userService() {
@@ -27,6 +24,6 @@ public class AppConfig {
     }
     @Bean
     public UserRepository userRepository() {
-        return new JpaUserRepository(em);
+        return new UserJpaRepository(emf);
     }
 }

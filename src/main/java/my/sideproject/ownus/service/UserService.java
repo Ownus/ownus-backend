@@ -1,8 +1,9 @@
 package my.sideproject.ownus.service;
 
 import my.sideproject.ownus.dto.RegisterDTO;
-import my.sideproject.ownus.dto.User;
+import my.sideproject.ownus.entity.UserEntity;
 
 public interface UserService {
-    User register(RegisterDTO registerDTO);
+    UserEntity register(RegisterDTO registerDTO);
+    UserEntity findById(String id);
 }
