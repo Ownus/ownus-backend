@@ -7,6 +7,7 @@ import my.sideproject.ownus.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,11 +27,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserEntity findById(String id) {
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if(userEntity.isPresent()) {
-            return userEntity.get();
+    public UserEntity ValidateById(String id) {
+        UserEntity userEntity = userRepository.findById(id);
+        if(userEntity != null) {
+            return userEntity;
         }
-        else return null;
+        return null;
+    }
+
+    @Override
+    public UserEntity ValidateByNickname(String nickname) {
+        UserEntity user = userRepository.findByNickname(nickname);
+        if(user != null)
+        {
+            return user;
+        }
+        return null;
     }
 }

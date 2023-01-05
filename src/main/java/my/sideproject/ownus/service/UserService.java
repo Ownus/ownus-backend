@@ -5,5 +5,7 @@ import my.sideproject.ownus.entity.UserEntity;
 
 public interface UserService {
     UserEntity register(RegisterDTO registerDTO);
-    UserEntity findById(String id);
+    UserEntity ValidateById(String id);
+
+    UserEntity ValidateByNickname(String nickname);
 }

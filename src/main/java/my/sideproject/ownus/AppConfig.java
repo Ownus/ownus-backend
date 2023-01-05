@@ -1,6 +1,5 @@
 package my.sideproject.ownus;
 
-import my.sideproject.ownus.entity.emf.UniqueEntityManagerFactory;
 import my.sideproject.ownus.repository.UserJpaRepository;
 import my.sideproject.ownus.repository.UserRepository;
 import my.sideproject.ownus.service.UserService;
