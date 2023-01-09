@@ -1,4 +1,4 @@
-package my.sideproject.ownus.repository;
+package my.sideproject.ownus.repository.user;
 
 import my.sideproject.ownus.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

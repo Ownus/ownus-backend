@@ -1,18 +1,14 @@
-package my.sideproject.ownus.dto;
+package my.sideproject.ownus.dto.user;
 
 import lombok.*;
-import my.sideproject.ownus.entity.UserEntity;
 
 @Getter
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterDTO {
+public class LoginDTO {
+
     private String user_id;
     private String password;
-
-    private String nickname;
-
 }

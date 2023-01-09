@@ -1,25 +1,30 @@
 package my.sideproject.ownus.entity;
 
 import lombok.*;
-import my.sideproject.ownus.dto.RegisterDTO;
+import my.sideproject.ownus.dto.user.RegisterDTO;
+import my.sideproject.ownus.entity.role.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
-
 @Entity(name = "users")
 @Table(name = "users")
 public class UserEntity {
+
+//    @Autowired
+//    private static PasswordEncoder passwordEncoder;
     @Id
     private String user_id;
     private String nickname;
     private String password;
 
     private String profile_url;
-    private String is_admin;
+    private UserRole is_admin;
 
-    public UserEntity(String user_id, String nickname, String password, String profile_url, String is_admin) {
+    public UserEntity(String user_id, String nickname, String password, String profile_url, UserRole is_admin) {
         this.user_id = user_id;
         this.nickname = nickname;
         this.password = password;
@@ -35,7 +40,7 @@ public class UserEntity {
         userEntity.setUser_id(registerDTO.getUser_id());
         userEntity.setPassword(registerDTO.getPassword());
         userEntity.setNickname("inseong");
-        userEntity.setIs_admin("Y");
+        userEntity.setIs_admin(UserRole.ROLE_USER);
         userEntity.setProfile_url("anywhere");
         return userEntity;
     }

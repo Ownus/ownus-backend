@@ -1,16 +1,10 @@
-package my.sideproject.ownus.repository;
+package my.sideproject.ownus.repository.user;
 
-import lombok.RequiredArgsConstructor;
 import my.sideproject.ownus.entity.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.jws.soap.SOAPBinding;
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UserJpaRepository implements UserRepository{
@@ -29,11 +23,8 @@ public class UserJpaRepository implements UserRepository{
         tx = em.getTransaction();
         try{
             tx.begin();
-            System.out.println("성공");
             em.persist(user);
-            System.out.println("성공");
             tx.commit();
-            System.out.println("성공");
         }
         catch (Exception e) {
             tx.rollback();
@@ -51,6 +42,7 @@ public class UserJpaRepository implements UserRepository{
     @Override
     public UserEntity findById(String user_id) {
         em = emf.createEntityManager();
+        System.out.println("user_id = " + user_id);
         UserEntity user = null;
         try {
             user = em.find(UserEntity.class, user_id);

@@ -1,10 +1,11 @@
 package my.sideproject.ownus;
 
-import my.sideproject.ownus.repository.UserJpaRepository;
-import my.sideproject.ownus.repository.UserRepository;
-import my.sideproject.ownus.service.UserService;
-import my.sideproject.ownus.service.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import my.sideproject.ownus.repository.token.TokenJpaRepository;
+import my.sideproject.ownus.repository.token.TokenRepository;
+import my.sideproject.ownus.repository.user.UserJpaRepository;
+import my.sideproject.ownus.repository.user.UserRepository;
+import my.sideproject.ownus.service.user.UserService;
+import my.sideproject.ownus.service.user.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,5 +25,11 @@ public class AppConfig {
     @Bean
     public UserRepository userRepository() {
         return new UserJpaRepository(emf);
+    }
+
+    @Bean
+    public TokenRepository tokenRepository()
+    {
+        return new TokenJpaRepository(emf);
     }
 }
