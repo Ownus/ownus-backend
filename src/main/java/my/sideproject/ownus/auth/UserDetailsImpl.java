@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 public class UserDetailsImpl implements UserDetails {
 
+
     private final UserEntity user;
 
     @Override

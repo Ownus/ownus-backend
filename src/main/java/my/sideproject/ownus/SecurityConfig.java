@@ -24,47 +24,26 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-//    private final CustomAccessDeniedHandler customAccessDeniedHandler;
-//    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-//    JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-//        return new JwtAuthenticationFilter(jwtTokenProvider);
-//    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-//        httpSecurity.httpBasic().disable(); /*SpringSecurity에서 만들어주는 로그인 페이지를 안쓰기 위해*/
+        httpSecurity.httpBasic().disable(); /*SpringSecurity에서 만들어주는 로그인 페이지를 안쓰기 위해*/
         httpSecurity.cors().disable();
-        httpSecurity.csrf().disable();/*프론트엔드가 분리된 환경을 위해 Restful한 Api 형태가 되는데 이를 위해*/
-
+        httpSecurity.csrf().disable();
 
         httpSecurity.authorizeRequests()
-                        .antMatchers("/**","/users/login", "/exception/**").permitAll()
+                        .antMatchers("/**").permitAll()
                         .anyRequest().authenticated();
-
-        /*JWT Token을 위한 필터를 이따가 만들건데, 이 필터를 어느 위치에서 사용하겠다고 등록 해줘야 필터가 작동됨*/
-//        httpSecurity.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+//                .and()
+//                .formLogin()
+//                .loginProcessingUrl("/users/login")
+//                .defaultSuccessUrl("/").permitAll()
+//                        .and()
+//                        .logout().logoutUrl("/users/logout").permitAll();
 
         httpSecurity
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-
-//        httpSecurity.formLogin()
-//                        .loginPage("/users/login").defaultSuccessUrl("/")
-//                        .usernameParameter("user_id")
-//                        .passwordParameter("password").loginProcessingUrl("/users/login")
-//                        .permitAll();
-        //로그아웃 처리
-//        httpSecurity.logout()
-//                .logoutUrl("/users/logout")
-//                .logoutSuccessUrl("/")
-//                .invalidateHttpSession(true);
-        /*토큰 인증 과정에서 발생하는 예외를 처리하기 위함*/
-//        httpSecurity.exceptionHandling()
-//                        .accessDeniedHandler(customAccessDeniedHandler)
-//                        .authenticationEntryPoint(customAuthenticationEntryPoint);
 
         httpSecurity
                 .apply(new JwtSecurityConfig(jwtTokenProvider));

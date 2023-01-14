@@ -1,9 +1,13 @@
 package my.sideproject.ownus;
 
+import my.sideproject.ownus.repository.product.ProductJpaRepository;
+import my.sideproject.ownus.repository.product.ProductRepository;
 import my.sideproject.ownus.repository.token.TokenJpaRepository;
 import my.sideproject.ownus.repository.token.TokenRepository;
 import my.sideproject.ownus.repository.user.UserJpaRepository;
 import my.sideproject.ownus.repository.user.UserRepository;
+import my.sideproject.ownus.service.product.ProductService;
+import my.sideproject.ownus.service.product.ProductServiceImpl;
 import my.sideproject.ownus.service.user.UserService;
 import my.sideproject.ownus.service.user.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +26,10 @@ public class AppConfig {
     public UserService userService() {
         return new UserServiceImpl(userRepository());
     }
+
+    @Bean
+    public ProductService productService() {return new ProductServiceImpl(productRepository());}
+
     @Bean
     public UserRepository userRepository() {
         return new UserJpaRepository(emf);
@@ -31,5 +39,10 @@ public class AppConfig {
     public TokenRepository tokenRepository()
     {
         return new TokenJpaRepository(emf);
+    }
+
+    @Bean
+    public ProductRepository productRepository() {
+        return new ProductJpaRepository(emf);
     }
 }

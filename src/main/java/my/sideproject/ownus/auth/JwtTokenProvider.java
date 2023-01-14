@@ -1,8 +1,7 @@
 package my.sideproject.ownus.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import my.sideproject.ownus.entity.UserEntity;
 import my.sideproject.ownus.entity.role.UserRole;
 import my.sideproject.ownus.repository.token.TokenRepository;
 import my.sideproject.ownus.repository.user.UserRepository;
@@ -61,80 +60,82 @@ public class JwtTokenProvider implements AuthenticationProvider {
         return this.createToken(user_id, role, refreshTokenValidTime);
     }
 
-    //JWT 토큰 생성
+    /**
+     * 토큰을 생성한다.
+     * 보통 accessToken에는 유저 정보(user_id, role)에 만료시기를 넣어서 암호화하고
+     * refreshToken에는 만료기한만 저장한다.
+     * 그래서 redis에 토큰하고 user를 식별할 수 있는 정보를 같이 넣어둔다는데 나는 일단 refreshToken에도 유저 정보를 담을 거임!
+     * */
     public String createToken(String user_id, UserRole role, Long tokenValid) {
-
         //payload 설정
-        Date now = new Date();
-//        Claims claims = Jwts.claims()
-//                .setSubject("access_token")
-//                .setIssuedAt(now)
-//                .setExpiration(new Date(now.getTime() + accessTokenValidTime));
-
         Claims claims = Jwts.claims().setSubject(user_id);
-
         claims.put("role", role);
-
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + tokenValid);
         return Jwts.builder()
                 .setClaims(claims) // 발행 유저 정보 저장
                 .setIssuedAt(now) // 발행 시간 저장
-                .setExpiration(new Date(now.getTime() + tokenValid)) // 토큰 유효 시간 저장
+                .setExpiration(expiration) // 토큰 유효 시간 저장
                 .signWith(SignatureAlgorithm.HS256, secretKey) //해싱 알고리즘 및 키 설정
                 .compact(); //생성
-
-//        return Jwts.builder()
-//                .setHeaderParam("typ", "JWT") //헤더
-//                .setClaims(claims) //페이로드
-//                .signWith(SignatureAlgorithm.HS256, secretKey) //서명 사용할 암호화 알고리즘과 signature에 들어갈 secretKey 세팅
-//                .compact();
     }
 
-    public Authentication getAuthentication(String token) throws UnsupportedEncodingException {
+    public Authentication getAuthentication(String token) {
         UserDetails user = userDetailService.loadUserByUsername(this.getUserId(token));
-        return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 
-    public String getUserId(String token) throws UnsupportedEncodingException {
+    public String getUserId(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
+    /**
+     * 액세스 토큰 뜯기
+     * */
     public String resolveAccessToken(HttpServletRequest request)
     {
         if(request.getHeader("Authorization") != null)
             return request.getHeader("Authorization");
         return null;
     }
-    public String resolveRefreshToken(HttpServletRequest request)
-    {
-        if(request.getHeader("refreshToken") != null)
+    /**
+     * 리프레시 토큰 뜯기
+     * */
+    public String resolveRefreshToken(HttpServletRequest request) {
+        if (request.getHeader("refreshToken") != null)
             return request.getHeader("refreshToken");
         return null;
     }
-//    public String resolveToken(HttpServletRequest request) {
-//        return request.getHeader("Authorization");
-//    }
-
+    /**
+     * 토큰 검증하기
+     * */
     public boolean validateToken(String jwtToken) {
-        try{
-            System.out.println("jwtToken = " + jwtToken);
+        try {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
-
-            System.out.println("jwtToken = " + jwtToken);
-            System.out.println("claims = " + claims);
-            
             return !claims.getExpiration().before(new Date());
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
             return false;
         }
     }
 
+    /**
+     * 응답 헤더에 액세스토큰 심어주기
+     * */
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken)
     {
         response.setHeader("authorization", "bearer " + accessToken);
     }
+    /**
+     * 응답 헤더에 리프레시토큰 심어주기
+     * */
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken)
     {
         response.setHeader("refreshToken", "bearer " + refreshToken);
     }
+
 
     public UserRole getRole(String user_id) {
         return userRepository.findById(user_id).getIs_admin();
@@ -144,7 +145,9 @@ public class JwtTokenProvider implements AuthenticationProvider {
         return null;
     }
 
-
+    public Jws<Claims> getClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+    }
 
     public boolean existsRefreshToken(String refreshToken)
     {
@@ -153,6 +156,6 @@ public class JwtTokenProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }
