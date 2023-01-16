@@ -1,6 +1,8 @@
 package my.sideproject.ownus.controller;
 
 import lombok.RequiredArgsConstructor;
+import my.sideproject.ownus.dto.product.ProductEditDTO;
+import my.sideproject.ownus.dto.product.ProductRegisterDTO;
 import my.sideproject.ownus.entity.ProductEntity;
 import my.sideproject.ownus.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ public class ProductController {
     public ResponseEntity insertDummy() {
         List<ProductEntity> productList = new ArrayList<>();
         for(int i = 0; i < 20; i++) {
-            ProductEntity product = new ProductEntity("product" + i,20000 + i, "description", "anywhere", "now","N");
+            ProductEntity product = new ProductEntity("product" + i,20000 + i, "description", "anywhere", new Date(),"N");
             productList.add(product);
         }
         productService.dummySave(productList);
@@ -43,4 +45,29 @@ public class ProductController {
         Page<ProductEntity> productsList = productService.getProductsList(pageable);
         return new ResponseEntity<>(productsList, HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity search(@RequestParam("keyword") String keyword, Pageable pageable) {
+        Page<ProductEntity> productsList = productService.search(keyword, pageable);
+        return new ResponseEntity<>(productsList, HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity register(@ModelAttribute ProductRegisterDTO productRegisterDTO) {
+        ProductEntity newproduct = productService.register(productRegisterDTO);
+        return new ResponseEntity<>(newproduct, HttpStatus.OK);
+    }
+
+    @GetMapping("/edit/{product_id}")
+    public ResponseEntity editForm(@PathVariable Long product_id) {
+        ProductEntity product = productService.findProductById(product_id);
+        if(product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return new ResponseEntity(product, HttpStatus.OK);
+    }
+//    @PutMapping("/edit/{product_id}")
+//    public ResponseEntity edit(@PathVariable Long product_id, @ModelAttribute ProductEditDTO productEditDTO) {
+//
+//    }
 }

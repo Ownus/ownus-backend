@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import my.sideproject.ownus.dto.product.ProductRegisterDTO;
 import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -51,7 +53,7 @@ public class ProductEntity {
      * 등록일
      * */
 
-    private String created_at;
+    private Date created_at;
 
     /**
      * 판매여부
@@ -59,12 +61,23 @@ public class ProductEntity {
     @Column
     private String is_sold;
 
-    public ProductEntity(String p_name, int p_price, String description, String anywhere, String now, String n) {
+    public ProductEntity(String p_name, int p_price, String description, String anywhere, Date now, String n) {
         this.p_name = p_name;
         this.p_price = p_price;
         this.p_info = description;
         this.thumbnail_url = anywhere;
         this.created_at = now;
         this.is_sold = "N";
+    }
+
+    public static ProductEntity toSaveEntity(ProductRegisterDTO productRegisterDTO) {
+        ProductEntity product = new ProductEntity();
+        product.setP_info(productRegisterDTO.getP_info());
+        product.setP_name(productRegisterDTO.getP_name());
+        product.setP_price(productRegisterDTO.getP_price());
+        product.setThumbnail_url(productRegisterDTO.getP_images().get(0));
+        product.setCreated_at(new Date());
+        product.setIs_sold("N");
+        return product;
     }
 }

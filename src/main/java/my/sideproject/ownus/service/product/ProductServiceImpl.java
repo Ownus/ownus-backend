@@ -1,7 +1,10 @@
 package my.sideproject.ownus.service.product;
 
+import my.sideproject.ownus.dto.product.ProductEditDTO;
+import my.sideproject.ownus.dto.product.ProductRegisterDTO;
 import my.sideproject.ownus.entity.ProductEntity;
 import my.sideproject.ownus.repository.product.ProductRepository;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,13 +36,32 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void save(ProductEntity product) {
-        productRepository.save(product);
-    }
-
-    @Override
     public List<ProductEntity> dummySave(List<ProductEntity> productList) {
         System.out.println("productList = " + productList);
         return productRepository.dummyInsertAll(productList);
+    }
+
+    @Override
+    public Page<ProductEntity> search(String keyword, Pageable pageable) {
+        return productRepository.findAllWithKeyword(keyword, pageable);
+    }
+
+    @Override
+    public ProductEntity register(ProductRegisterDTO productRegisterDTO) {
+        /* DTO -> 엔티티로 변환 */
+        ProductEntity product = ProductEntity.toSaveEntity(productRegisterDTO);
+        return productRepository.save(product);
+    }
+
+    @Override
+    public ProductEntity findProductById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    @Override
+    public ProductEntity edit(Long id, ProductEditDTO productEditDTO) {
+        ProductEntity product = findProductById(id);
+
+        return null;
     }
 }

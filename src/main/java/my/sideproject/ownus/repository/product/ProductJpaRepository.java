@@ -22,6 +22,25 @@ public class ProductJpaRepository implements ProductRepository{
     public ProductJpaRepository(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
+    @Override
+    public ProductEntity findById(Long id) {
+        em = emf.createEntityManager();
+        ProductEntity product = new ProductEntity();
+        String sql = "select p from product p where p.product_id = :id";
+        try {
+            product = em.createQuery(sql, ProductEntity.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+        finally {
+            em.close();
+        }
+        return product;
+    }
+
     @Override
     public Page<ProductEntity> findAll(Pageable pageable) {
         em = emf.createEntityManager();
@@ -32,7 +51,7 @@ public class ProductJpaRepository implements ProductRepository{
     }
 
     @Override
-    public void save(ProductEntity product) {
+    public ProductEntity save(ProductEntity product) {
         em = emf.createEntityManager();
         tx = em.getTransaction();
         try {
@@ -47,6 +66,7 @@ public class ProductJpaRepository implements ProductRepository{
         finally {
             em.close();
         }
+        return product;
     }
 
     @Override
@@ -69,5 +89,16 @@ public class ProductJpaRepository implements ProductRepository{
             em.close();
         }
         return productList;
+    }
+
+    @Override
+    public Page<ProductEntity> findAllWithKeyword(String keyword, Pageable pageable) {
+        em = emf.createEntityManager();
+        List<ProductEntity> productList = em.createQuery("select p from product p where p.p_name like '%' || :keyword || '%'")
+                .setParameter("keyword", keyword)
+                .getResultList();
+        Long total = Long.parseLong(String.valueOf(productList.size()));
+        em.close();
+        return new PageImpl<>(productList, pageable,total);
     }
 }

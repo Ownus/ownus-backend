@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface ProductRepository {
 
+    ProductEntity findById(Long id);
     Page<ProductEntity> findAll(Pageable pageable);
 
-    void save(ProductEntity product);
+    ProductEntity save(ProductEntity product);
 
     List<ProductEntity> dummyInsertAll(List<ProductEntity> productList);
+
+    Page<ProductEntity> findAllWithKeyword(String keyword, Pageable pageable);
+
+    ProductEntity edit(Long id, ProductEntity product);
 }
