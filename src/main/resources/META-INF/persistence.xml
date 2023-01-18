@@ -5,6 +5,7 @@
     <persistence-unit name="hello">
         <class>my.sideproject.ownus.entity.UserEntity</class>
         <class>my.sideproject.ownus.entity.ProductEntity</class>
+        <class>my.sideproject.ownus.entity.ProductImages</class>
         <class>my.sideproject.ownus.dto.token.RefreshToken</class>
         <properties>
             <!-- 필수 속성 -->

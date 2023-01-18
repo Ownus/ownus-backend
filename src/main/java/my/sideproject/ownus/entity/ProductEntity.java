@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import my.sideproject.ownus.dto.product.ProductRegisterDTO;
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -56,6 +57,10 @@ public class ProductEntity {
     private Date created_at;
 
     /**
+     * 수정일
+     * */
+    private Date updated_at;
+    /**
      * 판매여부
      * */
     @Column
@@ -65,7 +70,8 @@ public class ProductEntity {
         this.p_name = p_name;
         this.p_price = p_price;
         this.p_info = description;
-        this.thumbnail_url = anywhere;
+        this.thumbnail_url = "";
+//        this.images_url = new ArrayList<>();
         this.created_at = now;
         this.is_sold = "N";
     }

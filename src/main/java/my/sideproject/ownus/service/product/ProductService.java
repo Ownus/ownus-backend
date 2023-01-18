@@ -20,5 +20,7 @@ public interface ProductService {
 
     ProductEntity findProductById(Long id);
 
+    List<String> getImagesURL(Long id);
+
     ProductEntity edit(Long id, ProductEditDTO productEditDTO);
 }

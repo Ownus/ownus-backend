@@ -1,6 +1,7 @@
 package my.sideproject.ownus.dto.product;
 
 import lombok.Data;
+import my.sideproject.ownus.entity.ProductEntity;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public class ProductEditDTO {
     private String p_info;
 
     private List<String> p_images;
+
 }

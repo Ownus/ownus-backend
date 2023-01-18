@@ -3,21 +3,15 @@ package my.sideproject.ownus.controller;
 import lombok.RequiredArgsConstructor;
 import my.sideproject.ownus.dto.product.ProductEditDTO;
 import my.sideproject.ownus.dto.product.ProductRegisterDTO;
+import my.sideproject.ownus.entity.ProductImages;
 import my.sideproject.ownus.entity.ProductEntity;
 import my.sideproject.ownus.service.product.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import sun.awt.image.IntegerComponentRaster;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,19 +49,32 @@ public class ProductController {
     @PostMapping("/register")
     public ResponseEntity register(@ModelAttribute ProductRegisterDTO productRegisterDTO) {
         ProductEntity newproduct = productService.register(productRegisterDTO);
+
+//        List<String> pImages = productRegisterDTO.getP_images();
+//        List<ProductImages> images = new ArrayList<>();
+//        for(String pimage : pImages) {
+//            ProductImages image = new ProductImages();
+//            image.setProduct_id(newproduct.getProduct_id());
+//            image.setImage_path(pimage);
+//            images.add(image);
+//        }
+//        newproduct.setImages_url(images);
         return new ResponseEntity<>(newproduct, HttpStatus.OK);
     }
 
     @GetMapping("/edit/{product_id}")
     public ResponseEntity editForm(@PathVariable Long product_id) {
         ProductEntity product = productService.findProductById(product_id);
+//        List<String> images = productService.getImagesURL(product_id);
+//        product.setImages_url(images);
         if(product == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return new ResponseEntity(product, HttpStatus.OK);
     }
-//    @PutMapping("/edit/{product_id}")
-//    public ResponseEntity edit(@PathVariable Long product_id, @ModelAttribute ProductEditDTO productEditDTO) {
-//
-//    }
+    @PutMapping("/edit/{product_id}")
+    public ResponseEntity edit(@PathVariable Long product_id, @ModelAttribute ProductEditDTO productEditDTO) {
+        ProductEntity product = productService.edit(product_id, productEditDTO);
+        return new ResponseEntity(product, HttpStatus.OK);
+    }
 }

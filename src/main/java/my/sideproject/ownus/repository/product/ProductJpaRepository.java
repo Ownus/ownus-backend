@@ -1,6 +1,7 @@
 package my.sideproject.ownus.repository.product;
 
 import my.sideproject.ownus.entity.ProductEntity;
+import my.sideproject.ownus.entity.ProductImages;
 import my.sideproject.ownus.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -27,11 +29,12 @@ public class ProductJpaRepository implements ProductRepository{
     public ProductEntity findById(Long id) {
         em = emf.createEntityManager();
         ProductEntity product = new ProductEntity();
-        String sql = "select p from product p where p.product_id = :id";
+        String sql = "select p from product p inner join p.images_url i where p.product_id = :id";
         try {
             product = em.createQuery(sql, ProductEntity.class)
                     .setParameter("id", id)
                     .getSingleResult();
+
         } catch (Exception e) {
             e.getStackTrace();
         }
@@ -51,12 +54,15 @@ public class ProductJpaRepository implements ProductRepository{
     }
 
     @Override
-    public ProductEntity save(ProductEntity product) {
+    public ProductEntity save(ProductEntity product, List<ProductImages> images) {
         em = emf.createEntityManager();
         tx = em.getTransaction();
         try {
             tx.begin();
             em.persist(product);
+            for(ProductImages image : images) {
+                em.persist(image);
+            }
             tx.commit();
         }
         catch (Exception e) {
@@ -101,4 +107,15 @@ public class ProductJpaRepository implements ProductRepository{
         em.close();
         return new PageImpl<>(productList, pageable,total);
     }
+
+    @Override
+    public List<String> getImagesURLById(Long id) {
+        em = emf.createEntityManager();
+        List<String> list = em.createQuery("select p.images_url from product_image where p.id = :id")
+                     .setParameter("id", id)
+                     .getResultList();
+        em.close();
+        return list;
+    }
+
 }
