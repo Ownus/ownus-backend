@@ -53,20 +53,22 @@ public class ProductServiceImpl implements ProductService{
     public ProductEntity register(ProductRegisterDTO productRegisterDTO) {
         /* DTO -> 엔티티로 변환 */
         ProductEntity product = ProductEntity.toSaveEntity(productRegisterDTO);
-        List<ProductImages> images = getProductImages(productRegisterDTO, product);
-        return productRepository.save(product, images);
+
+        getProductImages(productRegisterDTO, product);
+        return productRepository.save(product);
     }
 
-    private static List<ProductImages> getProductImages(ProductRegisterDTO productRegisterDTO, ProductEntity product) {
+    private static void getProductImages(ProductRegisterDTO productRegisterDTO, ProductEntity product) {
         List<String> images_path = productRegisterDTO.getP_images();
-        List<ProductImages> images = new ArrayList<>();
+
+        List<ProductImages> images = product.getImages();
         for(String path : images_path) {
             ProductImages productImages = new ProductImages();
             productImages.setImage_path(path);
             productImages.setProduct(product);
             images.add(productImages);
         }
-        return images;
+        product.setImages(images);
     }
 
     @Override
@@ -89,10 +91,10 @@ public class ProductServiceImpl implements ProductService{
         for(String path : pImages) {
             ProductImages productImages = new ProductImages();
             productImages.setImage_path(path);
-            productImages.setProduct(product);
+//            productImages.setProduct(product);
             images.add(productImages);
         }
-        return productRepository.save(product, images);
+        return productRepository.save(product);
     }
 
     private static void toSaveEntityByEditForm(ProductEditDTO productEditDTO, ProductEntity product) {

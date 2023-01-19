@@ -1,5 +1,6 @@
 package my.sideproject.ownus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,9 @@ public class ProductEntity {
     @Column
     private String thumbnail_url;
 
+    @OneToMany(mappedBy = "product")
+    private List<ProductImages> images = new ArrayList<>();
+
     /**
      * 등록일
      * */
@@ -71,7 +75,6 @@ public class ProductEntity {
         this.p_price = p_price;
         this.p_info = description;
         this.thumbnail_url = "";
-//        this.images_url = new ArrayList<>();
         this.created_at = now;
         this.is_sold = "N";
     }

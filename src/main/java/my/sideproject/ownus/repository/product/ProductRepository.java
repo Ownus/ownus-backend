@@ -12,7 +12,7 @@ public interface ProductRepository {
     ProductEntity findById(Long id);
     Page<ProductEntity> findAll(Pageable pageable);
 
-    ProductEntity save(ProductEntity product, List<ProductImages> images);
+    ProductEntity save(ProductEntity product);
 
     List<ProductEntity> dummyInsertAll(List<ProductEntity> productList);
 

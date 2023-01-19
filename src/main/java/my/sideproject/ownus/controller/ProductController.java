@@ -12,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -49,24 +47,12 @@ public class ProductController {
     @PostMapping("/register")
     public ResponseEntity register(@ModelAttribute ProductRegisterDTO productRegisterDTO) {
         ProductEntity newproduct = productService.register(productRegisterDTO);
-
-//        List<String> pImages = productRegisterDTO.getP_images();
-//        List<ProductImages> images = new ArrayList<>();
-//        for(String pimage : pImages) {
-//            ProductImages image = new ProductImages();
-//            image.setProduct_id(newproduct.getProduct_id());
-//            image.setImage_path(pimage);
-//            images.add(image);
-//        }
-//        newproduct.setImages_url(images);
         return new ResponseEntity<>(newproduct, HttpStatus.OK);
     }
 
     @GetMapping("/edit/{product_id}")
     public ResponseEntity editForm(@PathVariable Long product_id) {
         ProductEntity product = productService.findProductById(product_id);
-//        List<String> images = productService.getImagesURL(product_id);
-//        product.setImages_url(images);
         if(product == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

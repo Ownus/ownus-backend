@@ -29,12 +29,11 @@ public class ProductJpaRepository implements ProductRepository{
     public ProductEntity findById(Long id) {
         em = emf.createEntityManager();
         ProductEntity product = new ProductEntity();
-        String sql = "select p from product p inner join p.images_url i where p.product_id = :id";
+        String sql = "select p from product p join fetch p.images where p.product_id = :id";
         try {
             product = em.createQuery(sql, ProductEntity.class)
                     .setParameter("id", id)
                     .getSingleResult();
-
         } catch (Exception e) {
             e.getStackTrace();
         }
@@ -54,16 +53,19 @@ public class ProductJpaRepository implements ProductRepository{
     }
 
     @Override
-    public ProductEntity save(ProductEntity product, List<ProductImages> images) {
+    public ProductEntity save(ProductEntity product) {
         em = emf.createEntityManager();
         tx = em.getTransaction();
         try {
             tx.begin();
             em.persist(product);
+            List<ProductImages> images = product.getImages();
+
             for(ProductImages image : images) {
                 em.persist(image);
             }
             tx.commit();
+
         }
         catch (Exception e) {
             tx.rollback();
@@ -100,7 +102,7 @@ public class ProductJpaRepository implements ProductRepository{
     @Override
     public Page<ProductEntity> findAllWithKeyword(String keyword, Pageable pageable) {
         em = emf.createEntityManager();
-        List<ProductEntity> productList = em.createQuery("select p from product p where p.p_name like '%' || :keyword || '%'")
+        List<ProductEntity> productList = em.createQuery("select p from product p join fetch p.images where p.p_name like '%' || :keyword || '%'")
                 .setParameter("keyword", keyword)
                 .getResultList();
         Long total = Long.parseLong(String.valueOf(productList.size()));
