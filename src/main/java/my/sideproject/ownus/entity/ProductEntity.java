@@ -51,7 +51,7 @@ public class ProductEntity {
     @Column
     private String thumbnail_url;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImages> images = new ArrayList<>();
 
     /**
@@ -88,5 +88,20 @@ public class ProductEntity {
         product.setCreated_at(new Date());
         product.setIs_sold("N");
         return product;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "product_id=" + product_id +
+                ", p_name='" + p_name + '\'' +
+                ", p_price=" + p_price +
+                ", p_info='" + p_info + '\'' +
+                ", thumbnail_url='" + thumbnail_url + '\'' +
+//                ", images=" + images +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                ", is_sold='" + is_sold + '\'' +
+                '}';
     }
 }

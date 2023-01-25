@@ -19,4 +19,8 @@ public interface ProductRepository {
     Page<ProductEntity> findAllWithKeyword(String keyword, Pageable pageable);
 
     List<String> getImagesURLById(Long id);
+
+    ProductEntity update(ProductEntity product);
+
+    ProductEntity delete(Long id);
 }

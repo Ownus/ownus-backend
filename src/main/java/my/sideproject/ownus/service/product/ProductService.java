@@ -23,4 +23,6 @@ public interface ProductService {
     List<String> getImagesURL(Long id);
 
     ProductEntity edit(Long id, ProductEditDTO productEditDTO);
+
+    ProductEntity delete(Long id);
 }

@@ -86,22 +86,30 @@ public class ProductServiceImpl implements ProductService{
     public ProductEntity edit(Long id, ProductEditDTO productEditDTO) {
         ProductEntity product = findProductById(id);
         toSaveEntityByEditForm(productEditDTO, product);
-        List<String> pImages = productEditDTO.getP_images();
-        List<ProductImages> images = new ArrayList<>();
-        for(String path : pImages) {
-            ProductImages productImages = new ProductImages();
-            productImages.setImage_path(path);
-//            productImages.setProduct(product);
-            images.add(productImages);
-        }
-        return productRepository.save(product);
+        return productRepository.update(product);
+    }
+
+    @Override
+    public ProductEntity delete(Long id) {
+        return productRepository.delete(id);
     }
 
     private static void toSaveEntityByEditForm(ProductEditDTO productEditDTO, ProductEntity product) {
         product.setP_info(productEditDTO.getP_info());
         product.setP_name(productEditDTO.getP_name());
         product.setP_price(productEditDTO.getP_price());
-        product.setThumbnail_url(productEditDTO.getP_images().get(0));
         product.setUpdated_at(new Date());
+
+        List<String> images_path = productEditDTO.getP_images();
+        List<ProductImages> images = product.getImages();
+        images.clear();
+        for(String path : images_path) {
+            ProductImages productImages = new ProductImages();
+            productImages.setImage_path(path);
+            productImages.setProduct(product);
+            images.add(productImages);
+        }
+        product.setImages(images);
+        product.setThumbnail_url(images.get(0).getImage_path());
     }
 }

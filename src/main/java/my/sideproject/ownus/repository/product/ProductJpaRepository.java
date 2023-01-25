@@ -60,12 +60,10 @@ public class ProductJpaRepository implements ProductRepository{
             tx.begin();
             em.persist(product);
             List<ProductImages> images = product.getImages();
-
             for(ProductImages image : images) {
                 em.persist(image);
             }
             tx.commit();
-
         }
         catch (Exception e) {
             tx.rollback();
@@ -118,6 +116,50 @@ public class ProductJpaRepository implements ProductRepository{
                      .getResultList();
         em.close();
         return list;
+    }
+
+    @Override
+    public ProductEntity update(ProductEntity product) {
+        em = emf.createEntityManager();
+        tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(product);
+            em.createQuery("delete from images i where product_id = :id")
+                    .setParameter("id", product.getProduct_id())
+                    .executeUpdate(); //기존에꺼 지우고 해야지
+            List<ProductImages> images = product.getImages();
+            for (ProductImages image : images) {
+                em.merge(image);
+            }
+            tx.commit();
+        }catch (Exception e) {
+            e.getStackTrace();
+            tx.rollback();
+        }
+        finally {
+            em.close();
+        }
+        return product;
+    }
+
+    @Override
+    public ProductEntity delete(Long id) {
+        em = emf.createEntityManager();
+        tx = em.getTransaction();
+        ProductEntity product = null;
+        try {
+            tx.begin();
+            product = em.find(ProductEntity.class, id);
+            em.remove(product);
+            tx.commit();
+        }catch (Exception e) {
+            tx.rollback();
+            e.getStackTrace();
+        }finally {
+            em.close();
+        }
+        return product;
     }
 
 }
