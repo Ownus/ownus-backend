@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface LikeRepository {
     Optional<Like> isUserLike(UserEntity user, ProductEntity product);
+    Optional<Like> save(Like like);
 }

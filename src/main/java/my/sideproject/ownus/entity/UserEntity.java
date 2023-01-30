@@ -44,4 +44,15 @@ public class UserEntity {
         userEntity.setProfile_url("anywhere");
         return userEntity;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "user_id='" + user_id + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
+                ", profile_url='" + profile_url + '\'' +
+                ", is_admin=" + is_admin +
+                '}';
+    }
 }

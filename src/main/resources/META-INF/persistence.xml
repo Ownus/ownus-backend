@@ -7,6 +7,7 @@
         <class>my.sideproject.ownus.entity.ProductEntity</class>
         <class>my.sideproject.ownus.entity.ProductImages</class>
         <class>my.sideproject.ownus.dto.token.RefreshToken</class>
+        <class>my.sideproject.ownus.entity.Like</class>
         <properties>
             <!-- 필수 속성 -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

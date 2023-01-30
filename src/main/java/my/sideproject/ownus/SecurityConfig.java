@@ -4,6 +4,7 @@ package my.sideproject.ownus;
 import lombok.RequiredArgsConstructor;
 import my.sideproject.ownus.auth.JwtSecurityConfig;
 import my.sideproject.ownus.auth.JwtTokenProvider;
+import my.sideproject.ownus.repository.user.UserJpaRepository;
 import my.sideproject.ownus.service.user.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,12 +35,6 @@ public class SecurityConfig {
         httpSecurity.authorizeRequests()
                         .antMatchers("/**").permitAll()
                         .anyRequest().authenticated();
-//                .and()
-//                .formLogin()
-//                .loginProcessingUrl("/users/login")
-//                .defaultSuccessUrl("/").permitAll()
-//                        .and()
-//                        .logout().logoutUrl("/users/logout").permitAll();
 
         httpSecurity
                 .sessionManagement()

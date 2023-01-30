@@ -17,8 +17,17 @@ public class Like {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private ProductEntity product;
+
+    public static Like toLikeEntity(UserEntity user, ProductEntity product) {
+        Like like = new Like();
+        like.setUser(user);
+        like.setProduct(product);
+        return like;
+    }
 }

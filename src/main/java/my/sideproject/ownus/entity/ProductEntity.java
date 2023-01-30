@@ -8,9 +8,7 @@ import lombok.Setter;
 import my.sideproject.ownus.dto.product.ProductRegisterDTO;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -69,6 +67,9 @@ public class ProductEntity {
      * */
     @Column
     private String is_sold;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    Set<Like> likes = new HashSet<>();
 
     public ProductEntity(String p_name, int p_price, String description, String anywhere, Date now, String n) {
         this.p_name = p_name;

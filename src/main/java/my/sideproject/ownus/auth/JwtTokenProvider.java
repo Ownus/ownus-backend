@@ -38,10 +38,10 @@ public class JwtTokenProvider implements AuthenticationProvider {
     private String secretKey;
 
     /*액세스 토큰 유효시간 30s */
-    private Long accessTokenValidTime = 50 * 1000L;
+    private Long accessTokenValidTime = 240 * 60 * 10 * 1000L;
 
-    private Long refreshTokenValidTime = 240*60*10 * 1000L;
-
+    private Long refreshTokenValidTime = 240 * 60 * 10 * 1000L;
+    //240 * 60 * 10 초?
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());

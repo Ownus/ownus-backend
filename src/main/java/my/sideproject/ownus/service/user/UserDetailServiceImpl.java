@@ -1,5 +1,6 @@
 package my.sideproject.ownus.service.user;
 
+import lombok.RequiredArgsConstructor;
 import my.sideproject.ownus.auth.UserDetailsImpl;
 import my.sideproject.ownus.entity.UserEntity;
 import my.sideproject.ownus.repository.user.UserRepository;

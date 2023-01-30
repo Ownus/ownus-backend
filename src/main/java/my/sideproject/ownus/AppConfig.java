@@ -1,5 +1,7 @@
 package my.sideproject.ownus;
 
+import my.sideproject.ownus.repository.like.LikeJpaRepository;
+import my.sideproject.ownus.repository.like.LikeRepository;
 import my.sideproject.ownus.repository.product.ProductJpaRepository;
 import my.sideproject.ownus.repository.product.ProductRepository;
 import my.sideproject.ownus.repository.token.TokenJpaRepository;
@@ -44,5 +46,10 @@ public class AppConfig {
     @Bean
     public ProductRepository productRepository() {
         return new ProductJpaRepository(emf);
+    }
+
+    @Bean
+    public LikeRepository likeRepository() {
+        return new LikeJpaRepository(emf);
     }
 }
